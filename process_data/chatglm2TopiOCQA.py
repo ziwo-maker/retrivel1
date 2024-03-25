@@ -2,12 +2,13 @@ import json
 from transformers import AutoTokenizer, AutoModel
 from rouge import Rouge
 import json
+import os
 # 参考摘要
 from nltk.translate.bleu_score import sentence_bleu
-
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 class Model():
     def __init__(self) -> None:
-        path='/public/home/thirring/GLM/chatglm3-6b-base'
+        path='/home/user/chatglm/ZhipuAI/chatglm3-6b/'
         self.tokenizer = AutoTokenizer.from_pretrained(path, trust_remote_code=True)
         self.model = AutoModel.from_pretrained(path, trust_remote_code=True).half().cuda()
         self.model = self.model.eval()
@@ -15,7 +16,7 @@ class Model():
 
         response,_=self.model.chat(self.tokenizer,prompt,history)
         return response
-chat_model=Model();
+
 def Judeg(per_data,now_data):
 
     prompt='''This is the current question and answer pair, query:{},answer:{}. Is the current answer based on the previous question and answer \
@@ -32,23 +33,50 @@ def get_rougescore(ref,sys):
     rouge = Rouge()
     scores = rouge.get_scores(sys, ref)
     return scores;
+def color_history(history):
+    format_history=[]
+    for i in range(0,len(history),2):
+        format_history.append({'role': 'user', 'content': history[i]})
+        format_history.append({'role': 'assistant', 'metadata': '', 'content': history[i+1]})    
+    return format_history
 
+
+
+def color_question(question,history):
+    #使用提示词将question和history组合起来
+    prompt='''Answer questions based on doc, doc{}, question:{}'''.format(question,history)
+    return prompt;
+chat_model=Model();
 def main():
     count=0
-    with open('./topiocqa_train.json','r') as f:
+    with open('./topiocqa_dev.json','r') as f:
         data_all=json.load(f);
+    count=0
+    for index,data_ in enumerate(data_all):
+        history=data_['Context']
 
-    for data_ in data_all:
-        hisotry=data_['Context']
-        flag=0;
-        chat_len=len(hisotry)
+        chat_len=len(history)
         question=data_['Question']
         answer=data_['Answer']  
-        if(chat_len!=0 and answer!='UNANSWERABLE'):
+        select_his=[];
+        question=color_question(question=question,history=data_['Rationale'])
+        #用rouge中的recall效果更佳
+        if(chat_len>=6 and answer!='UNANSWERABLE'):
+            answer_query=chat_model.Chat(question,history=color_history(history))
             for i in range(chat_len-2,-2,-2):
-                pre_history=hisotry[i:]
-                answer_query=chat_model.Chat(question)
-                answer_his=chat_model.Chat(question,history=pre_history)
+                pre_history=history[i:]
+                answer_his=chat_model.Chat(question,history=color_history(pre_history))
                 score_query=get_rougescore(answer,answer_query)
                 score_answer=get_rougescore(answer,answer_his)
+                if(score_answer[0]['rouge-1']['r']>score_query[0]['rouge-1']['r'] and i !=0):
+                    select_his.append({'history':pre_history,'score_answer':score_answer,'answer_his':answer_his,'answer_all':answer_query})
+                    count+=1;
+        data_['select_history']=select_his;
+        print('index',index,'count',count)
+        
+        with open('./TopiOCQA_dev_withhist_ration.jsonl','a') as fw:
+            fw.write(json.dumps(data_))  
+            fw.write('\n')  
+                    
+    print(count)                
 main()
