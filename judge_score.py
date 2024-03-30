@@ -9,7 +9,10 @@ class Judge_score():
 
     def get_rougescore(self, ref, sys):
         rouge = Rouge()
-        scores = rouge.get_scores(sys, ref)
+        try:
+            scores = rouge.get_scores(sys, ref)
+        except Exception as e:
+            scores=[{'rouge-1':{'r':2,'p':2}}]
         return scores
 
     def cos_similarity(self, stand_ans: str, others: List[str]):
