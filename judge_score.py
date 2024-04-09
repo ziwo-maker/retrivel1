@@ -37,14 +37,16 @@ class Judge_score():
 def get_ppl(text):
 
     #metric = evaluate.load(path='/home/server/GX/evaluate/metrics/bleu/')
-    metric = evaluate.load('perplexity')
-    results = metric.compute(text)
+    metric = evaluate.load('perplexity',module_type="metric")
+    results = metric.compute(model_id='gpt2',predictions=[text])
     return results
 
     # def 
 def get_bert_score(ref,sys):
+    ref=[ref]
+    sys=[sys]
     metric = evaluate.load('bertscore')
-    results = metric.compute(predictions=sys, references=ref)
+    results = metric.compute(predictions=sys, references=ref,lang='en')
     return results
 def get_bleu(ref,sys):
     metric = evaluate.load('bleu')
