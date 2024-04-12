@@ -10,7 +10,7 @@ def filter_answers(message, answers):
 class Model():
     def __init__(self,mode_path,type='mistral') -> None:
         self.type=type;
-        os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+
         if(type=='mistral'):
             self.tokenizer = AutoTokenizer.from_pretrained(mode_path, trust_remote_code=True)
             self.model = AutoModelForCausalLM.from_pretrained(mode_path, trust_remote_code=True).half().to('cuda')
@@ -29,7 +29,8 @@ class Model():
             response,_=self.model.chat(self.tokenizer,prompt,history,**kwargs)
         
             return response
-        
+        # import pdb;
+        # pdb.set_trace()
         messages=colo_histoty(history)
         messages.append(colo_histoty([prompt]))
         encodeds = self.tokenizer.apply_chat_template(messages, return_tensors="pt").to('cuda')

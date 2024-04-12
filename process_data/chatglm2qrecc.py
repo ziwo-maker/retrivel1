@@ -11,7 +11,7 @@ from model_loade import Model
 from judge_score import Judge_score
 import copy
 from utils import get_best_score
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
     chat_model=Model(chat_path)
     judeg=Judge_score(mode_path=path)
     count=0
-    args={'do_sample':False,'temperature':0.1,'top_p':0.7,'max_length':'100'}
+    args={'do_sample':False,'temperature':0.1,'top_p':0.7}
     with open('/home/server/GX/retrivel1/data/Qrecc/train/qrecc_train.json','r') as f:
         data_all=json.load(f);
     count=0
@@ -49,6 +49,8 @@ def main():
         if(chat_len>=2 and answer_list[-1]!='UNANSWERABLE'):
             best_history=[]
             ans_score_list=[]
+            if(chat_len%2==1):
+                chat_len-=1;
             for i in range(0,chat_len,2):
                 answer_query=chat_model.Chat(question,history=history[i:i+2],**args)
                 score_query=get_best_score(answer_list,answer_query)
@@ -58,27 +60,11 @@ def main():
             
             sorted_ans_score_list = sorted(ans_score_list, key=lambda x: x['score'][0]['rouge-1']['r'], reverse=True)
             best_ans=sorted_ans_score_list[0]
-            select_his.append({'history':history[best_ans['index']:best_ans['index']+2],'score_answer':'score_answer',\
-                                            'score_query':best_ans['score'],'answer_his':best_ans['answer'],\
-                                            'answer_all':'answer_query','query_cos_similary':'','cos_similary':float(1)})
+            for best_ans in sorted_ans_score_list:
+                select_his.append({'history':history[best_ans['index']:best_ans['index']+2],'score_answer':'score_answer',\
+                                            'score_query':best_ans['score'],'answer_his':best_ans['answer']})
 
-            # for i in range(0,chat_len,2):
-            #     pre_history=copy.copy(best_history)
-            #     if history[i] not in pre_history and score_query[0]['rouge-1']['r']>=0.3:
-            #         pre_history+=history[i:i+2]
-                    
-            #         answer_his=chat_model.Chat(question,history=pre_history,**args)
 
-            #         score_answer=get_best_score(answer_list,answer_his)
-            #         query_cos_similary=judeg.cos_similarity(answer_list[-1],[answer_his])
-            #         if(score_answer[0]['rouge-1']['r']>score_query[0]['rouge-1']['r']):
-            #              select_his.append({'history':pre_history,'score_answer':score_answer,\
-            #                                 'score_query':'score_query','answer_his':answer_his,\
-            #                                 'answer_all':'answer_query','query_cos_similary':float(query_cos_similary),'cos_similary':float(1)})
-
-                #if(query_cos_similary>cos_similary):
-                    # 
-                # print(cos_similary)
         data_['select_history']=select_his;
         print('index',index,'count',count)
         

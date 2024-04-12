@@ -25,7 +25,7 @@ def main():
     judeg=Judge_score(mode_path=path)
     count=0
     args={'do_sample':False,'temperature':0.1,'top_p':0.7,'max_length':'100'}
-    with open('./topiocqa_train.json','r') as f:
+    with open('./topiocqa_dev.json','r') as f:
         data_all=json.load(f);
     count=0
     current_len=0;
@@ -46,14 +46,10 @@ def main():
 
         select_his=[];
         topic=data_['Topic']
-        # question=color_question(question=question,history=data_['Rationale'])  不用ration的效果会好一些
-        #用rouge中的recall效果更佳，现在尝试使用余弦相似度  
+
         # path='/home/user/chatglm/ZhipuAI/chatglm3-6b/'
         if(chat_len>=2 and answer_list[-1]!='UNANSWERABLE'):
 
-            # args['max_new_tokens']=len(answer)
-            
-            #if score_query[0]['rouge-1']['r']>0.1:
             best_history=[]
             for i in range(0,chat_len,2):
                 score=get_best_score([topic],history[i]+' '+history[i+1])

@@ -2,7 +2,7 @@ import json
 from judge_score import get_bert_score,get_ppl
 from utils import get_best_score,get_bleu_score,get_meteor_score
 
-
+#用于计算测评分数
 def main():
     read_file=''
     write_file=''

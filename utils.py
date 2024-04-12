@@ -78,3 +78,24 @@ def get_bleu_score(ref,sys):
 
     score=get_bleu(ref,sys)
     return score
+def compute_mrr(sorted_list):
+    total_mrr = 0
+    count = 0
+    for item in sorted_list:
+        count += 1
+        if item['label'] == 1:
+            total_mrr += 1 / count
+    return total_mrr / len(sorted_list)
+
+
+def compute_precision_recall(sorted_list):
+    total_retrieved = len([item for item in sorted_list if item['label'] == 1])
+    evaluate_list=sorted_list[:int(len(sorted_list)/2)+1]
+
+    half_len=min(len(evaluate_list),total_retrieved)
+    total_relevant = sum(item['label'] for item in evaluate_list)
+    recall = total_relevant / total_retrieved if total_retrieved > 0 else 0
+    precision = total_relevant / half_len if half_len > 0 else 0
+
+
+    return precision, recall
