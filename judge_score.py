@@ -8,6 +8,7 @@ import torch
 import evaluate
 from datasets import load_metric
 from nltk.translate import meteor_score
+import datasets
 # from nltk.translate import cider
 def get_rougescore( ref, sys):
     rouge = Rouge()
@@ -23,7 +24,7 @@ class Judge_score():
         model_name = "/data/dataset/gpt2/"
         self.ppltokenizer = GPT2Tokenizer.from_pretrained(model_name)
         self.pplmodel = GPT2LMHeadModel.from_pretrained(model_name)
-
+ 
     def cos_similarity(self, stand_ans: str, others: List[str]):
         if not isinstance(others, list):
             others=[others]
@@ -38,13 +39,12 @@ def get_ppl(text):
 
     #metric = evaluate.load(path='/home/server/GX/evaluate/metrics/bleu/')
     metric = evaluate.load('perplexity',module_type="metric")
-    results = metric.compute(model_id='gpt2',predictions=[text])
+    results = metric.compute(model_id='gpt2',predictions=text)
     return results
 
     # def 
 def get_bert_score(ref,sys):
-    ref=[ref]
-    sys=[sys]
+
     metric = evaluate.load('bertscore')
     results = metric.compute(predictions=sys, references=ref,lang='en')
     return results
@@ -52,8 +52,16 @@ def get_bleu(ref,sys):
     metric = evaluate.load('bleu')
     results = metric.compute(predictions=sys, references=ref)
     return results
+
+
+def get_bleurt(ref,sys):
+    bleurt = datasets.load_metric("bleurt")
+    results = bleurt.compute(predictions=sys, references=ref)
+    return results
+    
 def get_meteor(ref,sys):
-    met_score = meteor_score.meteor_score(ref, sys)
+    metric = evaluate.load('meteor')
+    met_score = metric.compute(predictions=sys, references=ref)
     return met_score
 # def get_cider(ref,sys):
 #     cider_scorer = cider.Cider()

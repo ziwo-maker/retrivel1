@@ -4,7 +4,7 @@ import torch
 #调用初始数据集即可
 from sentence_transformers import SentenceTransformer
 from utils import get_best_score,compute_mrr,compute_precision_recall
-model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+#model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 def main():
     
     with open('/content/topiocqa_dev.json','r') as f:
@@ -78,7 +78,7 @@ def cal_cos():
             pre_history_list=[]
             pre_history_list.append(data_["Answer"])
             count=0;
-            for i in range(0,len(history),2):
+            for i in range(0,len(history),2): 
                 score=get_best_score([topic],history[i]+' '+history[i+1])
                 if(score[0]['rouge-1']['r']>0.7):
                     stand_score.append(history[i])
@@ -116,7 +116,7 @@ def cal_cos():
 def cal_recall():
     data_all=[]
     
-    with open('./data/TopiOCQA/dev/TopiOCQA_dev_three_answer.jsonl') as f:
+    with open('') as f:
       for _ in f:
         try:
           data_all.append(json.loads(_))
@@ -140,7 +140,7 @@ def cal_recall():
             count=0;
             for i in range(0,len(history),2):
                 score=get_best_score([topic],history[i]+' '+history[i+1])
-                if(score[0]['rouge-1']['r']>0.7):
+                if(score[0]['rouge-1']['r']>0.3):
                     stand_score.append(history[i])
                     stand_score.append(history[i+1])
                     count+=1;
@@ -161,9 +161,9 @@ def cal_recall():
             precision, recall = compute_precision_recall(data_dict_sort)
             if len(stand_score)==0:
                 continue
-            if precision==0 and recall==0:
-               print(stand_answer)
-               print(data_dict_sort)
+            # if precision==0 and recall==0:
+            #    print(stand_answer)
+            #    print(data_dict_sort)
             #sum_mrr+=compute_mrr(data_dict_sort)
             
             count1+=1;

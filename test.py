@@ -1,76 +1,76 @@
-from transformers import BertTokenizer, BertForSequenceClassification
-import torch
-from transformers import BertConfig, BertForSequenceClassification
 import json
-import random
-
-from utils import get_meteor_score
-from judge_score import get_bleu,get_ppl
-model_name='./save1'
-# 1. 加载分词器和模型
-# tokenizer = BertTokenizer.from_pretrained(model_name)
-config = BertConfig.from_pretrained(model_name, num_labels=2, hidden_dropout_prob= 0.3)
-# def train(model, train_data, val_data, learning_rate, epochs):
-model_bert=BertForSequenceClassification.from_pretrained(model_name, config=config).to('cuda')
-# 2. 准备输入数据
-data_path='./data/TopiOCQA/'
-
-val_data=[]
-val_data_nge=[]
-
-with open('TopiOCQA_train_no_answer_rouge.jsonl','r') as f:
-    for _ in f:
-        val_data.append(json.loads(_))
-count=0;
-for data_ in val_data:
-    select_history=data_['select_history'];
-    for sel in select_history:
-        if(len(sel['history'])>2):
-            count+=1;
-print('count',count)
-print('val_data',len(val_data)) 
 
 
-hypothesis= "The cat is on the mat."
+import json
+import os
+# 参考摘要
 
-# 生成的句子
-references= [["look at! one cat sat on the mat"]]
+import torch
 
-score=get_ppl(hypothesis)
-print(score)
-# with open('data/TopiOCQA/dev/topiocqa_dev.json','r') as f:
-#     data_all=json.load(f)
+from model_loade import Model
+from judge_score import Judge_score
+import copy
+from utils import get_best_score
+import os
 
 
-# count=0;
-# for data_ in data_all:
-#     topic=data_['Topic']
-#     history=data_['Context']
-#     best_history=[]
-#     score_list=[]
-#     if(len(history)<4):
-#         continue;
-#     for i in range(0,len(history),2):
-#         score=get_best_score([topic],history[i]+' '+history[i+1])
-#         score_list.append({'pre_history':history[i:i+2],'score':score})
-#     sorted_data = sorted(score_list, key=lambda x: x['score'][0]['rouge-1']['r'], reverse=True)
-#     pos_index=0;
-#     for index in range(0,len(sorted_data)):
-#         if(sorted_data[index]['score'][0]['rouge-1']['r']>0.8):
-#             with open('positive_dev.jsonl','a') as f:
-#                 f.write(json.dumps({'Question':data_['Question'],
-#                                     'history':sorted_data[index]['pre_history'],'label':1,
-#                                     'score':sorted_data[index]['score']}))
-#                 f.write('\n')
-#             pos_index+=1;
-#             count+=1;
-#     for index in range(pos_index,min(len(sorted_data),pos_index*2)):
-#         if(sorted_data[index]['score'][0]['rouge-1']['r']<0.5):
-#             with open('negivate_dev.jsonl','a') as f:
-#                 f.write(json.dumps({'Question':data_['Question'],
-#                                     'history':sorted_data[index]['pre_history'],'label':0,
-#                                     'score':sorted_data[index]['score']}))
-#                 f.write('\n')
-           
-# print(count)
 
+
+
+
+def main():
+    path='/home/server/GX/allmini'
+    chat_path='/home/server/GX/Mistral-7B-Instruct-v0.2/'
+    # chat_path='/home/server/GX/gemma-7b/'
+    file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer_mistral_NEW.jsonl'
+
+    # chat_model=Model(chat_path)
+    
+    count=0
+    args={'temperature':0.1,'top_p':0.7,'max_length':1024}
+    with open('./topiocqa_dev.json','r') as f:
+        data_all=json.load(f);
+    
+    count=0
+    current_len=0;
+    # if os.path.exists(file_path):
+    #     with open(file_path,'r') as fw:
+    #         for index,_ in enumerate(fw):
+    #             current_len=index
+    #             count= index
+    # if not current_len!=0:
+    #     data_all=data_all[current_len+1:]
+    for index,data_ in enumerate(data_all):
+        history=data_['Context']
+        chat_len=len(history)
+        question=data_['Question']
+        #组装所有的答案，并成list
+        answer_list=[]
+        #answer_list=[ans['Answer'] for ans in data_['Additional_answers'] if ans['Answer']!='UNANSWERABLE']
+        answer_list.append(data_['Answer'])
+
+        # select_his=data_['Context'];
+        topic=data_['Topic']
+        stand_score=[]
+        # path='/home/user/chatglm/ZhipuAI/chatglm3-6b/'
+        if(chat_len>=2 and answer_list[-1]!='UNANSWERABLE'):
+            for i in range(0,len(history),2):
+                score=get_best_score(topic,history[i]+' '+history[i+1])
+                if(score[0]['rouge-1']['r']>=0.3):
+                    stand_score.append(history[i])
+                    stand_score.append(history[i+1])
+            if(len(stand_score)==len(history)):
+                count+=1;
+               
+        #     if(len(stand_score)==0):
+        #         count+=1
+        #     answer_query=chat_model.Chat(question,history=stand_score,**args)
+        #     select_his.append({'query':question,'history':stand_score,'answer_his':answer_query})
+            
+        # data_['select_his']=select_his
+        # with open(file_path,'a') as fw:
+        #     fw.write(json.dumps(data_))  
+        #     fw.write('\n')  
+    print(count)            
+              
+main()

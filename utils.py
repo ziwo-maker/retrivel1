@@ -60,10 +60,14 @@ def get_meteor_score(ref,sys):
     for i in range(len(ref)):
 
         ref[i]=separate_words_and_punctuation(ref[i]).lower()
-        ref[i]=ref[i].split()
-    sys=separate_words_and_punctuation(sys).lower()
+        
+    
+    if not isinstance(sys, list):
+        sys=[sys]
+    for i in range(len(sys)):
 
-    sys=sys.split()
+        sys[i]=separate_words_and_punctuation(sys[i]).lower()
+    
     score=get_meteor(ref,sys)
     return score
 def get_bleu_score(ref,sys):
@@ -71,11 +75,14 @@ def get_bleu_score(ref,sys):
     if not isinstance(ref, list):
         ref=[ref]
     for i in range(len(ref)):
-
         ref[i]=separate_words_and_punctuation(ref[i]).lower()
+        ref[i]=ref[i].split()
+    if not isinstance(sys, list):
+        sys=[sys]
 
-    sys=separate_words_and_punctuation(sys).lower()
-
+    for i in range(len(ref)):
+        sys[i]=separate_words_and_punctuation(sys[i]).lower()
+        sys[i]=sys[i].split()
     score=get_bleu(ref,sys)
     return score
 def compute_mrr(sorted_list):
@@ -99,3 +106,19 @@ def compute_precision_recall(sorted_list):
 
 
     return precision, recall
+
+def jaccard_similarity(ref, sys):
+    # 将句子分割成单词并转换为集合
+    sentence1=separate_words_and_punctuation(ref).lower()
+    sentence2=separate_words_and_punctuation(sys).lower()
+    set1 = set(sentence1.split())
+    set2 = set(sentence2.split())
+    
+    # 计算交集和并集的大小
+    intersection = len(set1.intersection(set2))
+    union = len(set1.union(set2))
+    
+    # 计算Jaccard相似度
+    similarity = intersection / union if union != 0 else 0
+    
+    return similarity

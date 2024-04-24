@@ -11,6 +11,7 @@ from model_loade import Model
 from judge_score import Judge_score
 import copy
 from utils import get_best_score
+import os
 
 
 
@@ -20,21 +21,24 @@ from utils import get_best_score
 def main():
     path='/home/server/GX/allmini'
     chat_path='/home/server/GX/Mistral-7B-Instruct-v0.2/'
-    file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer.jsonl'
-    chat_model='Model(chat_path)'
-    judeg=Judge_score(mode_path=path)
+    #chat_path='/home/server/GX/gemma-7b/'
+    file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer_chatglm.jsonl'
+
+    chat_model=Model(chat_path)
+    
     count=0
-    args={'do_sample':False,'temperature':0.1,'top_p':0.7,'max_length':'100'}
+    args={'temperature':0.1,'top_p':0.7,'max_length':1024}
     with open('./topiocqa_dev.json','r') as f:
         data_all=json.load(f);
     count=0
     current_len=0;
-    if os.path.exists(file_path):
-        with open(file_path,'r') as fw:
-            for index,_ in enumerate(fw):
-                current_len=index
-                count= index
-    data_all=data_all[current_len+1:]
+    # if os.path.exists(file_path):
+    #     with open(file_path,'r') as fw:
+    #         for index,_ in enumerate(fw):
+    #             current_len=index
+    #             count= index
+    # data_all=data_all[current_len:]
+
     for index,data_ in enumerate(data_all):
         history=data_['Context']
         chat_len=len(history)
@@ -54,24 +58,18 @@ def main():
             select_his.append({'query':question,'history':[],'answer_his':answer_query})
             answer_all=chat_model.Chat(question,history=history,**args)
             select_his.append({'query':question,'history':history,'answer_his':answer_all})
-            
+            stand_score=[]
             # print('score_query',score_query)
-            for i in range(0,chat_len,2):
-                pre_history=history[i:i+2]
-                            
-                answer_his=chat_model.Chat(question,history=pre_history,**args)
-
-                # score_answer=get_best_score(answer_list,answer_his)
-                # query_cos_similary=judeg.cos_similarity(answer_list[-1],[answer_his])
-               
-                select_his.append({'query':question,'history':pre_history,'answer_his':answer_his})
-            
-                #if(query_cos_similary>cos_similary):
-                    # 
-                # print(cos_similary)
-        data_['select_history']=select_his;
-        print('index',index,'count',count)
-        
+            for i in range(0,len(history),2):
+                score=get_best_score(topic,history[i]+' '+history[i+1])
+                if(score[0]['rouge-1']['r']>=0.3):
+                    stand_score.append(history[i])
+                    stand_score.append(history[i+1])
+            if(len(stand_score)==len(history)):
+                count+=        print(count)
+            answer_party=chat_model.Chat(question,history=stand_score,**args)
+            select_his.append({'query':question,'history':stand_score,'answer_his':answer_party})
+        data_['select_history']=select_his
         with open(file_path,'a') as fw:
             fw.write(json.dumps(data_))  
             fw.write('\n')  
