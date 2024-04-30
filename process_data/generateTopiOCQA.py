@@ -17,27 +17,22 @@ import os
 
 
 
-
+os.environ['CUDA_VISIBLE_DEVICES']="1"
 def main():
     path='/home/server/GX/allmini'
-    chat_path='/home/server/GX/Mistral-7B-Instruct-v0.2/'
+    chat_path='/home/server/GX/Meta-Llama-3-8B-Instruct/'
     #chat_path='/home/server/GX/gemma-7b/'
-    file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer_chatglm.jsonl'
+    file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer_llama3.jsonl'
 
-    chat_model=Model(chat_path)
+    chat_model=Model(mode_path=chat_path,type='llama3')
     
     count=0
     args={'temperature':0.1,'top_p':0.7,'max_length':1024}
     with open('./topiocqa_dev.json','r') as f:
         data_all=json.load(f);
     count=0
-    current_len=0;
-    # if os.path.exists(file_path):
-    #     with open(file_path,'r') as fw:
-    #         for index,_ in enumerate(fw):
-    #             current_len=index
-    #             count= index
-    # data_all=data_all[current_len:]
+
+
 
     for index,data_ in enumerate(data_all):
         history=data_['Context']
@@ -65,8 +60,7 @@ def main():
                 if(score[0]['rouge-1']['r']>=0.3):
                     stand_score.append(history[i])
                     stand_score.append(history[i+1])
-            if(len(stand_score)==len(history)):
-                count+=        print(count)
+
             answer_party=chat_model.Chat(question,history=stand_score,**args)
             select_his.append({'query':question,'history':stand_score,'answer_his':answer_party})
         data_['select_history']=select_his

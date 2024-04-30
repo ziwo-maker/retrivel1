@@ -33,26 +33,24 @@ def main():
         score_rouge_raw=get_best_score(stand_ans,raw_query)[0]['rouge-1']['r']
         score_rouge_all=get_best_score(stand_ans,all_query)[0]['rouge-1']['r']
         score_rouge_party=get_best_score(stand_ans,select_history[-1]['answer_his'])[0]['rouge-1']['r']
-        max_score=0.0
-        for i in range(2,len(select_history)-1):
-          score_tmp=get_best_score(stand_ans,select_history[i]['answer_his'])
-          score_tmp=score_tmp[0]['rouge-1']['r']
-          max_score=max(score_tmp,max_score)
-
-        if(score_rouge_party<0.2):
-            continue;
-        if(score_rouge_all>score_rouge_party):
-           count1+=1
-          #  if(len(select_history[-1]['history'])==0):
-          #     print(len(select_history[-1]['history']))
+        # score_rouge_raw=len(raw_query)
+        # score_rouge_all=len(all_query)
+        # score_rouge_party=len(select_history[-1]['answer_his'])
+        
+        # if(score_rouge_party<0.2):
+        #     continue;
+        # if(score_rouge_all>score_rouge_party):
+        #    count1+=1
+        #   #  if(len(select_history[-1]['history'])==0):
+        #   #     print(len(select_history[-1]['history']))
         count+=1;
         score1+=score_rouge_raw
         score2+=score_rouge_all
-        score3+=max_score
+
         score4+=score_rouge_party
     print(score1/count)
     print(score2/count)
-    print(score3/count)
+    # print(score3/count)
     print(score4/count)
     print(count1)
 
@@ -62,7 +60,10 @@ def main():
 
 
 
-
+def read_length_data(file_path):
+    with open(file_path, 'r') as file:
+        lengths = [float(line.strip()) for line in file]
+    return lengths
 def main2():
 
     data_all=[]
@@ -72,7 +73,7 @@ def main2():
     score4=0.0
     count=0
     count1=0
-    with open('/content/drive/MyDrive/retrivel1-main/data/TopiOCQA/dev/TopiOCQA_dev_three_answer_mistral_NEW.jsonl') as f:
+    with open('data/TopiOCQA/dev/TopiOCQA_dev_three_answer_mistral.jsonl') as f:
         for _ in f:
           try:
             data_all.append(json.loads(_))
@@ -95,13 +96,26 @@ def main2():
     # score1=get_ppl(raw_query_list)
     # score2=get_ppl(all_query_list)
     # score3=get_ppl(party_list)
+    
 
-    score1=get_meteor_score(stand_ans_list,raw_query_list)
-    score2=get_meteor_score(stand_ans_list,all_query_list)
-    score3=get_meteor_score(stand_ans_list,party_list)
-    print(score1)
-    print(score2)
-    print(score3)
+
+
+
+    
+    len1=[len(x) for x in raw_query_list]
+    len2=[len(x) for x in all_query_list]
+    len3=[len(x) for x in party_list]
+    len4=[len(x) for x in stand_ans_list]
+    import pandas as pd
+    df = pd.DataFrame({'raw': len1, 'all': len2, 'party': len3,'stand_answer':len4})
+    output_file = "length_data.xlsx"
+    df.to_excel(output_file, index=False)
+    # score1=get_meteor_score(stand_ans_list,raw_query_list)
+    # score2=get_meteor_score(stand_ans_list,all_query_list)
+    # score3=get_meteor_score(stand_ans_list,party_list)
+    # print(score1)
+    # print(score2)
+    # print(score3)
     # print(sum(score1['meteor'])/len(raw_query_list))
     # print(sum(score2['meteor'])/len(all_query_list))
     # print(sum(score3['meteor'])/len(party_list))
@@ -112,4 +126,4 @@ def main2():
     # print(sum(score3['f1'])/len(party_list))
 
 
-main()
+main2()

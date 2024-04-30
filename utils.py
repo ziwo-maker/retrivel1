@@ -92,7 +92,7 @@ def compute_mrr(sorted_list):
         count += 1
         if item['label'] == 1:
             total_mrr += 1 / count
-    return total_mrr / len(sorted_list)
+    return total_mrr 
 
 
 def compute_precision_recall(sorted_list):

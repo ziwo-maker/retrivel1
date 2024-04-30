@@ -22,25 +22,29 @@ def main():
     path='/home/server/GX/allmini'
     chat_path='/home/server/GX/Mistral-7B-Instruct-v0.2/'
     #chat_path='/home/server/GX/gemma-7b/'
-    file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer_every_turn.jsonl'
-
-    chat_model=Model(chat_path)
+    read_file='./data/Qrecc/test/Qrecc_test_mistral.jsonl'
+    write_file='./data/Qrecc/test/Qrecc_test_three_answer_mistral.jsonl'
+    chat_model=Model(chat_path,type='mistral')
     
     count=0
     args={'temperature':0.1,'top_p':0.7,'max_length':1024}
-    with open('/home/server/GX/retrivel1/data/TopiOCQA/dev/topiocqa_dev.json','r') as f:
-        data_all=json.load(f);
+    data_all=[];
+    with open(read_file,'r') as f:
+       for _ in f:
+           data_all.append(json.loads(_))
     count=0
-    current_len=0;
-    if os.path.exists(file_path):
-        with open(file_path,'r') as fw:
-            for index,_ in enumerate(fw):
-                current_len=index
-                count= index
+    # current_len=0;
+    # if os.path.exists(file_path):
+    #     with open(file_path,'r') as fw:
+    #         for index,_ in enumerate(fw):
+    #             current_len=index
+    #             count= index
     
-    data_all=data_all[current_len:]
+    # data_all=data_all[current_len:]
 
     for index,data_ in enumerate(data_all):
+
+
         history=data_['Context']
         chat_len=len(history)
         question=data_['Question']
@@ -55,15 +59,19 @@ def main():
 
         if(chat_len%2==1):
             continue
-        # path='/home/user/chatglm/ZhipuAI/chatglm3-6b/'
+        select_his=[]
         if(chat_len>=2 and answer_list[-1]!='UNANSWERABLE'):
-
-            for i in range(0,len(history),2):
-                answer_query=chat_model.Chat(question,history=history[i:i+2],**args)
-                select_his.append({'query':question,'history':history[i:i+2],'answer_his':answer_query})
-        data_['select_history']=select_his
-        with open(file_path,'a') as fw:
-            fw.write(json.dumps(data_))  
+            raw_query=chat_model.Chat(question,history=[],**args)
+            raw_all=chat_model.Chat(question,history=history,**args)
+            raw_party=chat_model.Chat(question,history=data_['select_history'],**args)
+            rewrite_query=chat_model.Chat(data_['Rewrite'],history=[],**args)
+            select_his.append(raw_query)
+            select_his.append(raw_all)
+            select_his.append(raw_party)
+            select_his.append(rewrite_query)
+       
+        with open(write_file,'a') as fw:
+            fw.write(json.dumps({'question':question,'stand_answer':data_['Answer'],"answer":select_his}))  
             fw.write('\n')  
                     
               
@@ -89,15 +97,15 @@ def main2():
         selected=[]
         if len(sorted_data)>1:
             best_score=sorted_data[0]['score']
-            selected.append(sorted_data[0])
+            selected+=sorted_data[0]['history']
             for i in range(1,len(sorted_data)):
-                if(best_score-sorted_data[i]['score']<=0.15):
-                    selected.append(sorted_data[i])
-        data_['select_history']=selected
-        sum_+=len(selected)/len(select_history)
-        count+=1;
-        with open(write_file,'a') as f:
-            f.write(json.dumps(data_))
-            f.write('\n')
+                if(best_score-sorted_data[i]['score']<0.1):
+                    selected+=sorted_data[i]['history']
+            data_['select_history']=selected
+            sum_+=(len(selected)/2)/len(select_history)
+            count+=1;
+            with open(write_file,'a') as f:
+                f.write(json.dumps(data_))
+                f.write('\n')
     print(sum_/count)
 main()

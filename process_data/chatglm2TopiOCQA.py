@@ -11,7 +11,7 @@ from model_loade import Model
 from judge_score import Judge_score
 import copy
 from utils import get_best_score
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+
 
 
 
@@ -24,7 +24,7 @@ def main():
     chat_model=Model(chat_path)
     judeg=Judge_score(mode_path=path)
     count=0
-    args={'do_sample':False,'temperature':0.1,'top_p':0.7,'max_length':'100'}
+    args={'temperature':0.1,'top_p':0.7,'max_length':1024}
     with open('./topiocqa_dev.json','r') as f:
         data_all=json.load(f);
     count=0

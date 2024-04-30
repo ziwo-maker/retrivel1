@@ -21,7 +21,7 @@ def main():
     chat_model=Model(chat_path)
     judeg=Judge_score(mode_path=path)
     count=0
-    args={'do_sample':False,'temperature':0.1,'top_p':0.7}
+    args={'temperature':0.1,'top_p':0.7,'max_length':1024}
     with open('/home/server/GX/retrivel1/data/Qrecc/train/qrecc_train.json','r') as f:
         data_all=json.load(f);
     count=0
