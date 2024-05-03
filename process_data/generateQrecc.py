@@ -33,14 +33,7 @@ def main():
        for _ in f:
            data_all.append(json.loads(_))
     count=0
-    # current_len=0;
-    # if os.path.exists(file_path):
-    #     with open(file_path,'r') as fw:
-    #         for index,_ in enumerate(fw):
-    #             current_len=index
-    #             count= index
-    
-    # data_all=data_all[current_len:]
+
 
     for index,data_ in enumerate(data_all):
 

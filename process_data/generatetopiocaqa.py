@@ -66,7 +66,7 @@ def main():
             fw.write(json.dumps(data_))  
             fw.write('\n')  
                     
-              
+#计算最佳分数的         
 def main2():
     read_file='./data/Qrecc/test/Qrecc_test_three_answer_mistral_every_turn.jsonl'
     write_file='./data/Qrecc/test/Qrecc_test_three_answer_mistral.jsonl'

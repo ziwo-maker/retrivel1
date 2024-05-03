@@ -39,7 +39,7 @@ def get_ppl(text):
 
     #metric = evaluate.load(path='/home/server/GX/evaluate/metrics/bleu/')
     metric = evaluate.load('perplexity',module_type="metric")
-    results = metric.compute(model_id='gpt2',predictions=text)
+    results = metric.compute(model_id='/home/server/GX/gpt2/',predictions=text,device='cuda')
     return results
 
     # def 

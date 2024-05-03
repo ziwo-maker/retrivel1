@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import  DataLoader
 
 from dataloader import Dataset
-from model_load import Model
+
 
 import torch.nn as nn 
 import json
@@ -10,7 +10,7 @@ from torch.optim import Adam
 
 
 import random
-import os
+
 from transformers import BertConfig, BertForSequenceClassification,BertTokenizer
 
 from transformers import AdamW
@@ -26,11 +26,11 @@ logger = logging.getLogger(__name__)
 model_name='/home/server/GX/bert-base-uncased'
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-learning_rate=1e-5
-epochs=3;
+learning_rate=1e-6
+epochs=1;
 batch_size=32
-weight_decay = 1e-4
-drop_out=0.4
+weight_decay = 1e-5
+drop_out=0.5
 train_size=1000
 
 
@@ -59,7 +59,8 @@ def train():
         for index,_ in enumerate(f):
             train_data_nge.append(json.loads(_))
     random.shuffle(train_data_nge)
-    train_data+=train_data_nge[:positive_len]
+    #train_data+=train_data_nge[:positive_len]
+    train_data+=train_data_nge
     random.shuffle(train_data)
     with open(f'positive_dev.jsonl','r') as f:
         for _ in f:
@@ -71,7 +72,8 @@ def train():
         for index,_ in enumerate(f):
             val_data_nge.append(json.loads(_))
     random.shuffle(val_data_nge)
-    val_data+=val_data_nge[:positive_len]
+    #val_data+=val_data_nge[:positive_len]
+    val_data+=val_data_nge
     
   
     train_data = Dataset(train_data)
@@ -138,7 +140,7 @@ def train():
             optimizer.step()
             #print(batch_loss)
             # 计算准确率
-            #print(f"r:{r},p:{p},f:{f},acc:{acc}")
+        print(f"r:{r},p:{p},f:{f},acc:{acc}")
         # 输出训练集的损失和准确率
         print(f"Epoch {epoch_num + 1}/{epochs}, Train Loss: {total_loss_train/len(train_dataloader)}, Train Accuracy: {epoch_acc/len(train_data)},Acc:{acc}")
         logger.info(f"Epoch {epoch_num + 1}/{epochs}, Train Loss: {total_loss_train/len(train_dataloader)}, Train Accuracy: {epoch_acc/len(train_data)}")
@@ -173,11 +175,11 @@ def train():
                 # 计算准确率
                 dev_history.append(val_loss.item())
                 total_acc_val += acc*batch_size
-                #print(f"r:{r},p:{p},f:{f},acc:{acc}")
+                print(f"r:{r},p:{p},f:{f},acc:{acc}")
         # 输出验证集的损失和准确率
        
         print(f"Epoch {epoch_num + 1}/{epochs}, Validation Loss: {total_loss_val/len(val_dataloader)}, Validation Accuracy: {total_acc_val/(len(val_dataloader)*batch_size)}")
         logger.info(f"Epoch {epoch_num + 1}/{epochs}, Validation Loss: {total_loss_val/len(val_dataloader)}, Validation Accuracy: {total_acc_val/(len(val_dataloader)*batch_size)}")
     draw_plt(train_loss_history,dev_history)
-    model_bert.save_pretrained('./save1/')
+    model_bert.save_pretrained('./save_noweight/')
 train()

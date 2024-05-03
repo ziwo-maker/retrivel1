@@ -1,0 +1,21 @@
+2024-05-01 21:40:11,678 - __main__ - INFO - learng_rate:1e-05.epoch:3,batch_size:32,weight_decay:0.0001.train_size:1000
+2024-05-01 21:41:08,179 - __main__ - INFO - learng_rate:1e-05.epoch:3,batch_size:32,weight_decay:0.0001.train_size:1000
+2024-05-01 21:42:50,767 - __main__ - INFO - learng_rate:1e-05.epoch:3,batch_size:32,weight_decay:0.0001.train_size:1000
+2024-05-01 21:57:37,609 - __main__ - INFO - Epoch 1/3, Train Loss: 0.556392949934937, Train Accuracy: 0.7090614050594469
+2024-05-01 21:57:37,610 - __main__ - INFO - r:0.0,p:0.0,f:0.0
+2024-05-01 21:57:55,538 - __main__ - INFO - Epoch 1/3, Validation Loss: 0.5297752879257125, Validation Accuracy: 0.7641768292682928
+2024-05-01 22:11:32,927 - __main__ - INFO - Epoch 2/3, Train Loss: 0.31193057217899745, Train Accuracy: 0.8700553447830403
+2024-05-01 22:11:32,928 - __main__ - INFO - r:0.9999999966666667,p:0.9999999966666667,f:0.9999999916666666
+2024-05-01 22:11:50,926 - __main__ - INFO - Epoch 2/3, Validation Loss: 0.3977166930349862, Validation Accuracy: 0.8361788617886179
+2024-05-01 22:25:27,223 - __main__ - INFO - Epoch 3/3, Train Loss: 0.15944121306719158, Train Accuracy: 0.9412601930041655
+2024-05-01 22:25:27,224 - __main__ - INFO - r:0.0,p:0.0,f:0.0
+2024-05-01 22:25:45,240 - __main__ - INFO - Epoch 3/3, Validation Loss: 0.4531313538309035, Validation Accuracy: 0.8359247967479674
+2024-05-02 21:56:59,162 - __main__ - INFO - learng_rate:1e-05.epoch:1,batch_size:32,weight_decay:0.0001.train_size:1000
+2024-05-02 21:58:07,738 - __main__ - INFO - learng_rate:1e-05.epoch:1,batch_size:32,weight_decay:1e-05.train_size:1000
+2024-05-02 22:12:55,771 - __main__ - INFO - Epoch 1/1, Train Loss: 0.50956756800815, Train Accuracy: 0.7432110852744802
+2024-05-02 22:12:55,771 - __main__ - INFO - r:0.999999995,p:0.999999995,f:0.9999999900000001
+2024-05-02 22:13:13,936 - __main__ - INFO - Epoch 1/1, Validation Loss: 0.4288642608780202, Validation Accuracy: 0.8126524390243902
+2024-05-02 22:13:49,255 - __main__ - INFO - learng_rate:1e-06.epoch:1,batch_size:32,weight_decay:1e-05.train_size:1000
+2024-05-02 22:28:39,057 - __main__ - INFO - Epoch 1/1, Train Loss: 0.6856940235454863, Train Accuracy: 0.5664522679575917
+2024-05-02 22:28:39,057 - __main__ - INFO - r:0.9999999900000002,p:0.4999999975,f:0.6666666577777778
+2024-05-02 22:28:56,996 - __main__ - INFO - Epoch 1/1, Validation Loss: 0.6735372504567713, Validation Accuracy: 0.5802337398373985
