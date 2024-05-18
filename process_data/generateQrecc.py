@@ -16,15 +16,16 @@ import os
 
 
 
-
+llm_type='qwen'
 
 def main():
-    path='/home/server/GX/allmini'
-    chat_path='/home/server/GX/Mistral-7B-Instruct-v0.2/'
-    #chat_path='/home/server/GX/gemma-7b/'
+
+    chat_path='/home/server/GX/Qwen1.5-7B-Chat/'
+
     read_file='./data/Qrecc/test/Qrecc_test_mistral.jsonl'
-    write_file='./data/Qrecc/test/Qrecc_test_three_answer_mistral.jsonl'
-    chat_model=Model(chat_path,type='mistral')
+   
+    write_file=f'./data/Qrecc/test/Qrecc_test_three_answer_{llm_type}.jsonl'
+    chat_model=Model(chat_path,type=llm_type)
     
     count=0
     args={'temperature':0.1,'top_p':0.7,'max_length':1024}
@@ -70,7 +71,7 @@ def main():
               
 def main2():
     read_file='./data/Qrecc/test/Qrecc_test_three_answer_mistral_every_turn.jsonl'
-    write_file='./data/Qrecc/test/Qrecc_test_three_answer_mistral.jsonl'
+    write_file=f'./data/Qrecc/test/Qrecc_test_three_answer_{llm_type}.jsonl'
     data_all=[]
     with open(read_file,'r') as f :
         for _ in f:

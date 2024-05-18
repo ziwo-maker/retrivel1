@@ -19,7 +19,7 @@ import os
 
 
 def main():
-    path='/home/server/GX/allmini'
+
     chat_path='/home/server/GX/Mistral-7B-Instruct-v0.2/'
     #chat_path='/home/server/GX/gemma-7b/'
     file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer_every_turn.jsonl'
@@ -32,13 +32,13 @@ def main():
         data_all=json.load(f);
     count=0
     current_len=0;
-    if os.path.exists(file_path):
-        with open(file_path,'r') as fw:
-            for index,_ in enumerate(fw):
-                current_len=index
-                count= index
+    # if os.path.exists(file_path):
+    #     with open(file_path,'r') as fw:
+    #         for index,_ in enumerate(fw):
+    #             current_len=index
+    #             count= index
     
-    data_all=data_all[current_len:]
+    # data_all=data_all[current_len:]
 
     for index,data_ in enumerate(data_all):
         history=data_['Context']

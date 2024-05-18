@@ -18,10 +18,13 @@ class Model():
             self.tokenizer = AutoTokenizer.from_pretrained(mode_path, trust_remote_code=True)
             self.model = AutoModelForCausalLM.from_pretrained(mode_path, trust_remote_code=True).half().to('cuda')
             self.model = self.model.eval()
-        elif type=='llama3' or type=='qwen':
+        elif type=='llama3' :
             self.tokenizer = AutoTokenizer.from_pretrained(mode_path, trust_remote_code=True)
             self.model = AutoModelForCausalLM.from_pretrained(mode_path,  torch_dtype=torch.bfloat16,device_map="auto",trust_remote_code=True).half().to('cuda')
-            
+        elif type=='qwen':
+            self.tokenizer = AutoTokenizer.from_pretrained(mode_path, trust_remote_code=True)
+            self.model = AutoModelForCausalLM.from_pretrained(mode_path,  torch_dtype=torch.bfloat16,device_map="auto",trust_remote_code=True).to('cuda')
+                
         else:
             self.tokenizer = AutoTokenizer.from_pretrained(mode_path, trust_remote_code=True)
             self.model = AutoModel.from_pretrained(mode_path, trust_remote_code=True).half().cuda()
@@ -59,7 +62,7 @@ class Model():
             model_inputs = self.tokenizer([text], return_tensors="pt").to('cuda')
             generated_ids = self.model.generate(
             model_inputs.input_ids,
-            max_new_tokens=512
+            **kwargs
             )
             generated_ids = [
                 output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)

@@ -39,13 +39,14 @@ def get_ppl(text):
 
     #metric = evaluate.load(path='/home/server/GX/evaluate/metrics/bleu/')
     metric = evaluate.load('perplexity',module_type="metric")
-    results = metric.compute(model_id='/home/server/GX/gpt2/',predictions=text,device='cuda')
+    results = metric.compute(model_id='gpt2',predictions=text)
     return results
 
     # def 
 def get_bert_score(ref,sys):
 
-    metric = evaluate.load('bertscore')
+    metric = evaluate.load("bertscore")
+    print('baseline_path','sentence-transformers/all-MiniLM-L6-v2')
     results = metric.compute(predictions=sys, references=ref,lang='en')
     return results
 def get_bleu(ref,sys):
@@ -61,7 +62,7 @@ def get_bleurt(ref,sys):
     
 def get_meteor(ref,sys):
     metric = evaluate.load('meteor')
-    met_score = metric.compute(predictions=sys, references=ref)
+    met_score = metric.compute(predictions=sys, references=ref,alpha=0.9,beta=2,gamma=0.1)
     return met_score
 # def get_cider(ref,sys):
 #     cider_scorer = cider.Cider()

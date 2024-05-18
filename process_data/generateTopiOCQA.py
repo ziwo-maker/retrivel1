@@ -16,15 +16,15 @@ import os
 
 
 
+#生成三种答案 raw，all， party
 
-os.environ['CUDA_VISIBLE_DEVICES']="1"
 def main():
     path='/home/server/GX/allmini'
-    chat_path='/home/server/GX/Meta-Llama-3-8B-Instruct/'
+    chat_path='/home/server/GX/Qwen1.5-14B-Chat-GPTQ-Int8/'
     #chat_path='/home/server/GX/gemma-7b/'
-    file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer_llama3.jsonl'
+    file_path='./data/TopiOCQA/dev/TopiOCQA_dev_three_answer_qwen14B.jsonl'
 
-    chat_model=Model(mode_path=chat_path,type='llama3')
+    chat_model=Model(mode_path=chat_path,type='qwen')
     
     count=0
     args={'temperature':0.1,'top_p':0.7,'max_length':1024}

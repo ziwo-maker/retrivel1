@@ -9,7 +9,7 @@ from utils import get_best_score,compute_mrr,compute_precision_recall
 def cal_cos():
     data_all=[]
     
-    with open('data/TopiOCQA/dev/TopiOCQA_dev_three_answer_mistral.jsonl') as f:
+    with open('data/TopiOCQA/dev/TopiOCQA_dev_three_answer_qwen.jsonl') as f:
       for _ in f:
         try:
           data_all.append(json.loads(_))
@@ -42,13 +42,13 @@ def cal_cos():
             score=get_best_score(data_['Answer'],data_['select_history'][2]['answer_his'])[0]['rouge-1']['r']
             score1=get_best_score(data_['Answer'],data_['select_history'][1]['answer_his'])[0]['rouge-1']['r']
             for i in range(0,12,1):
-               if(tmp<i/10 and tmp>=(i/10)-0.1 and score>=0.23):
+               if(tmp<i/10 and tmp>=(i/10)-0.1 and score>=0.15):
                   count1[i]+=score
                   count2[i]+=1
                   count3[i]+=score1
     for  i in range(len(count1)):
         if(count2[i]!=0):
-            print(count1[i]/count2[i],count3[i]/count2[i],count2[i])
+            print(count1[i]/count2[i]-count3[i]/count2[i],)
     print(max_turn)    
     # print([x-y for x,y in zip(count1,count3)])
     #print(count3)

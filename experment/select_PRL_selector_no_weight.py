@@ -13,23 +13,24 @@ from transformers import BertConfig, BertForSequenceClassification,BertTokenizer
 os.environ['HF_ENDPOINT'] = 'https://hf-mirror.com'
 
 
-chat_path='/home/server/GX/Meta-Llama-3-8B-Instruct/'
+chat_path='/home/server/GX/Mistral-7B-Instruct-v0.2/'
+type_llm='mistral'
 #chat_path='/home/server/GX/gemma-7b/'
 
 
 count=0
 args={'temperature':0.1,'top_p':0.7,'max_length':1024}
-write_path='data/TopiOCQA/dev/topiocqa_dev_seletor_noweight.jsonl'
+write_path='data/Qrecc/test/qrecc_test_seletor_noweight.jsonl'
 
 def chat_LLM():
     data_all=[]
     with open(write_path,'r') as f:
         for _ in f:
             data_all.append(json.loads(_))
+    data_all=data_all[:1000]
+    chat_model=Model(chat_path,type=type_llm)
 
-    chat_model=Model(chat_path,type='llama3')
-
-    write_path2='data/TopiOCQA/dev/topiocqa_dev_seletor_noweight_llama3.jsonl'
+    write_path2=f'data/Qrecc/test/qrecc_test_seletor_noweight_{type_llm}.jsonl'
     for data_ in data_all:
         answer=chat_model.Chat(data_['question'],data_['history'],**args)
         data_['answer']=answer
