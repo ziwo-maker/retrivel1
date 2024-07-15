@@ -33,16 +33,14 @@ def cal_cos():
             pre_history_list.append(data_["Answer"])
             for i in range(0,len(history),2): 
                 score=get_best_score([topic],history[i]+' '+history[i+1])
-                if(score[0]['rouge-1']['r']>0.7):
-                    stand_score.append(history[i])
-                    stand_score.append(history[i+1])
+
 
             tmp=len(history)/20.0
             max_turn=max(max_turn,len(history))
             score=get_best_score(data_['Answer'],data_['select_history'][2]['answer_his'])[0]['rouge-1']['r']
             score1=get_best_score(data_['Answer'],data_['select_history'][1]['answer_his'])[0]['rouge-1']['r']
             for i in range(0,12,1):
-               if(tmp<i/10 and tmp>=(i/10)-0.1 and score>=0.15):
+               
                   count1[i]+=score
                   count2[i]+=1
                   count3[i]+=score1
