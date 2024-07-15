@@ -1,6 +1,3 @@
-当然可以，以下是一个Markdown格式的`README.md`文件示例，你可以根据你的项目具体情况进行调整：
-
-```markdown
 # Revolutionizing Chatbot Responsiveness
 
 ## Overview
@@ -33,7 +30,7 @@ This project is licensed under the [MIT License](LICENSE).
 If you find our work useful in your research, please consider citing:
 ```
 @misc{your2024chatbot,
-  author = {Your Name},
+  author = {weicheng Wang},
   title = {Revolutionizing Chatbot Responsiveness: Automated History Context Selector for Multi-turn Dialogue Systems in Large Language Models},
   year = {2024},
   publisher = {Your Publisher or Institutional Repository},
