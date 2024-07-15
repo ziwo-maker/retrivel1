@@ -28,9 +28,7 @@ def main():
             for i in range(0,chat_len,2):
                 pre_history_list.append(history[i]+' '+history[i+1])
                 score=get_best_score([topic],history[i]+' '+history[i+1])
-                if(score[0]['rouge-1']['r']>0.4):
-                    stand_score.append(1)
-                    count+=1;
+                
                 else:
                     stand_score.append(0)
             embeddings = model.encode(pre_history_list)  
