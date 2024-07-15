@@ -22,9 +22,7 @@ def main():
         answer=data_['answer'];
         stand_answer=data_['stand_answer']
         tmp=get_best_score(stand_answer,answer)[0]['rouge-1']['r']
-        if (tmp<0.2 and 'selector' in read_file) or len(answer)>3000:
-          count+=1
-          continue
+        
         recall_score+=tmp
         
         if not isinstance(answer, str):
