@@ -37,12 +37,6 @@ def main():
         # score_rouge_all=len(all_query)
         # score_rouge_party=len(select_history[-1]['answer_his'])
         
-        # if(score_rouge_party<0.2):
-        #     continue;
-        # if(score_rouge_all>score_rouge_party):
-        #    count1+=1
-        #   #  if(len(select_history[-1]['history'])==0):
-        #   #     print(len(select_history[-1]['history']))
         count+=1;
         score1+=score_rouge_raw
         score2+=score_rouge_all
