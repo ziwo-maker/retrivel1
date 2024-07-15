@@ -5,8 +5,8 @@ This repository contains the code for the research paper "Revolutionizing Chatbo
 
 ## Key Features
 - **Automated Context Selector**: Innovative algorithm for identifying the most relevant historical context.
-- **Scalability**: Compatible with large-scale language models for robust dialogue systems.
-- **Customization**: Flexible parameters to tailor the context selection process.
+- **Scalability**: Compatible with LLMs for robust dialogue systems.
+
 
 ## Table of Contents
 
@@ -18,7 +18,7 @@ This repository contains the code for the research paper "Revolutionizing Chatbo
 
 
 ## Documentation
-Documentation for the project can be found in the [docs](docs) directory or online at [your-documentation-url].
+Documentation for the project can be found in this project.
 
 ## Contributing
 We welcome contributions! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
@@ -40,6 +40,5 @@ If you find our work useful in your research, please consider citing:
 ## Contact
 For questions or support, feel free to reach out:
 - **Email**: weichengwang@stu.xhu.edu.cn
-- **Website**: [Your Website](https://yourwebsite.com)
 
 ```
