@@ -33,14 +33,13 @@ If you find our work useful in your research, please consider citing:
   author = {weicheng Wang},
   title = {Revolutionizing Chatbot Responsiveness: Automated History Context Selector for Multi-turn Dialogue Systems in Large Language Models},
   year = {2024},
-  publisher = {Your Publisher or Institutional Repository},
-  howpublished = {\url{Your URL to the paper or repository}}
+  
 }
 ```
 
 ## Contact
 For questions or support, feel free to reach out:
-- **Email**: your.email@example.com
+- **Email**: weichengwang@stu.xhu.edu.cn
 - **Website**: [Your Website](https://yourwebsite.com)
 
 ```
