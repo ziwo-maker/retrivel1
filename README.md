@@ -29,8 +29,8 @@ This project is licensed under the [MIT License](LICENSE).
 ## Citation
 If you find our work useful in your research, please consider citing:
 ```
-@misc{your2024chatbot,
-  author = {weicheng Wang},
+@misc{
+  author = {Weicheng Wanga, Xiaoliang Chena, Hongyun Zhang, Duoqian Miao, Xiaolin Qin, Peng Lu},
   title = {Revolutionizing Chatbot Responsiveness: Automated History Context Selector for Multi-turn Dialogue Systems in Large Language Models},
   year = {2024},
   
